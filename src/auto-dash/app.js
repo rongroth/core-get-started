@@ -37,10 +37,10 @@ angular.module('app', []).component('app', {
     let linechartObject = null;
 
     const select = (value) => {
-      app.getField('Movie').then((field) => {
+      app.getField('timestamp').then((field) => {
         field.select(value).then(() => {
           $scope.dataSelected = true;
-          this.getMovieInfo().then(() => {
+          this.getIisInfo().then(() => {
             $scope.showFooter = true;
           });
         });
@@ -57,29 +57,30 @@ angular.module('app', []).component('app', {
       qHyperCubeDef: {
         qDimensions: [{
           qDef: {
-            qFieldDefs: ['Movie'],
+            qFieldDefs: ['IDPS-TPS'],
             qSortCriterias: [{
               qSortByAscii: 1,
             }],
           },
         }],
         qMeasures: [{
-          qDef: {
-            qDef: '[Adjusted Costs]',
-            qLabel: 'Adjusted cost ($)',
+            qDef: {
+              qDef: '[TPS]',
+              qLabel: 'TPS',
+            }
           },
-          qSortBy: {
-            qSortByNumeric: -1,
-          },
-        },
-        {
-          qDef: {
-            qDef: '[imdbRating]',
-            qLabel: 'imdb rating',
-          },
-        }],
+          {
+            qDef: {
+              qDef: '[timestamp]',
+              qLabel: 'time',
+            },
+          }
+        ],
         qInitialDataFetch: [{
-          qTop: 0, qHeight: 50, qLeft: 0, qWidth: 3,
+          qTop: 0,
+          qHeight: 10,
+          qLeft: 0,
+          qWidth: 2,
         }],
         qSuppressZero: false,
         qSuppressMissing: true,
@@ -94,47 +95,6 @@ angular.module('app', []).component('app', {
         clear: () => this.clearAllSelections(),
         hasSelected: $scope.dataSelected,
       });
-      this.painted = true;
-    };
-
-    const linechartProperties = {
-      qInfo: {
-        qType: 'visualization',
-        qId: '',
-      },
-      type: 'my-picasso-linechart',
-      labels: true,
-      qHyperCubeDef: {
-        qDimensions: [{
-          qDef: {
-            qFieldDefs: ['Year'],
-            qSortCriterias: [{
-              qSortByAscii: 1,
-            }],
-          },
-        }],
-        qMeasures: [{
-          qDef: {
-            qDef: 'Sum([Adjusted Costs])',
-            qLabel: 'Adjusted Costs in total ($)',
-          },
-          qSortBy: {
-            qSortByNumeric: -1,
-          },
-        },
-        ],
-        qInitialDataFetch: [{
-          qTop: 0, qHeight: 50, qLeft: 0, qWidth: 3,
-        }],
-        qSuppressZero: false,
-        qSuppressMissing: false,
-      },
-    };
-
-    const linechart = new Linechart();
-
-    const paintLineChart = (layout) => {
-      linechart.paintLinechart(document.getElementById('chart-container-linechart'), layout);
       this.painted = true;
     };
 
@@ -155,66 +115,51 @@ angular.module('app', []).component('app', {
       };
 
       // Add local data
-      const filePathMovie = '/data/movies.csv';
-      const tableMovie = new Halyard.Table(filePathMovie, {
-        name: 'Movies',
-        fields: [
-          { src: 'Movie', name: 'Movie' },
-          { src: 'Year', name: 'Year' },
-          { src: 'Adjusted Costs', name: 'Adjusted Costs' },
-          { src: 'Description', name: 'Description' },
-          { src: 'Image', name: 'Image' },
+      const filePath = '/data/idps-tps.csv';
+      const tableTps = new Halyard.Table(filePath, {
+        name: 'IDPS-TPS',
+        fields: [{
+            src: 'timestamp',
+            name: 'timestamp'
+          },
+          {
+            src: 'TPS',
+            name: 'TPS'
+          }
         ],
         delimiter: ',',
       });
-      halyard.addTable(tableMovie);
+      halyard.addTable(tableTps);
 
-      // Add web data
-      $http.get('https://gist.githubusercontent.com/carlioth/b86ede12e75b5756c9f34c0d65a22bb3/raw/e733b74c7c1c5494669b36893a31de5427b7b4fc/MovieInfo.csv')
-        .then((data) => {
-          const table = new Halyard.Table(data.data, { name: 'MoviesInfo', delimiter: ';', characterSet: 'utf8' });
-          halyard.addTable(table);
-        })
-        .then(() => {
-          enigma.create(config).open().then((qix) => {
-            this.connected = true;
-            this.connecting = false;
-            qix.createSessionAppUsingHalyard(halyard).then((result) => {
-              app = result;
-              result.getAppLayout()
-                .then(() => {
-                  result.createSessionObject(scatterplotProperties).then((model) => {
-                    scatterplotObject = model;
+      enigma.create(config).open().then((qix) => {
+        this.connected = true;
+        this.connecting = false;
+        qix.createSessionAppUsingHalyard(halyard).then((result) => {
+          app = result;
+          result.getAppLayout()
+            .then(() => {
+              result.createSessionObject(scatterplotProperties).then((model) => {
+                scatterplotObject = model;
 
-                    const update = () => scatterplotObject.getLayout().then((layout) => {
-                      paintScatterPlot(layout);
-                    });
-
-                    scatterplotObject.on('changed', update);
-                    update();
-                  });
-
-                  result.createSessionObject(linechartProperties).then((model) => {
-                    linechartObject = model;
-
-                    const update = () => linechartObject.getLayout().then((layout) => {
-                      paintLineChart(layout);
-                    });
-
-                    linechartObject.on('changed', update);
-                    update();
-                  });
+                const update = () => scatterplotObject.getLayout().then((layout) => {
+                  const tpss = layout.qHyperCube.qDataPages[0].qMatrix;
+                  console.log(layout);
+                  paintScatterPlot(layout);
                 });
-            }, () => {
-              this.error = 'Could not create session app';
-              this.connected = false;
-              this.connecting = false;
+
+                scatterplotObject.on('changed', update);
+                update();
+              });
             });
-          }, () => {
-            this.error = 'Could not connect to QIX Engine';
-            this.connecting = false;
-          });
+        }, () => {
+          this.error = 'Could not create session app';
+          this.connected = false;
+          this.connecting = false;
         });
+      }, () => {
+        this.error = 'Could not connect to QIX Engine';
+        this.connecting = false;
+      });
     };
 
     this.clearAllSelections = () => {
@@ -225,7 +170,7 @@ angular.module('app', []).component('app', {
       $scope.showFooter = false;
     };
 
-    this.getMovieInfo = () => {
+    this.getIisInfo = () => {
       const tableProperties = {
         qInfo: {
           qType: 'visualization',
@@ -235,33 +180,21 @@ angular.module('app', []).component('app', {
         labels: true,
         qHyperCubeDef: {
           qDimensions: [{
-            qDef: {
-              qFieldDefs: ['Movie'],
+              qDef: {
+                qFieldDefs: ['timestamp'],
+              },
             },
-          },
-          {
-            qDef: {
-              qFieldDefs: ['Image'],
+            {
+              qDef: {
+                qFieldDefs: ['TPS'],
+              },
             },
-          },
-          {
-            qDef: {
-              qFieldDefs: ['Year'],
-            },
-          },
-          {
-            qDef: {
-              qFieldDefs: ['Genre'],
-            },
-          },
-          {
-            qDef: {
-              qFieldDefs: ['Description'],
-            },
-          },
           ],
           qInitialDataFetch: [{
-            qTop: 0, qHeight: 50, qLeft: 0, qWidth: 50,
+            qTop: 0,
+            qHeight: 10,
+            qLeft: 0,
+            qWidth: 2,
           }],
           qSuppressZero: false,
           qSuppressMissing: true,
