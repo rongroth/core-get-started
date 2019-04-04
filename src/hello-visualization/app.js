@@ -64,22 +64,26 @@ angular.module('app', []).component('app', {
           },
         }],
         qMeasures: [{
-          qDef: {
-            qDef: '[Adjusted Costs]',
-            qLabel: 'Adjusted cost ($)',
+            qDef: {
+              qDef: '[Adjusted Costs]',
+              qLabel: 'Adjusted cost ($)',
+            },
+            qSortBy: {
+              qSortByNumeric: -1,
+            },
           },
-          qSortBy: {
-            qSortByNumeric: -1,
-          },
-        },
-        {
-          qDef: {
-            qDef: '[imdbRating]',
-            qLabel: 'imdb rating',
-          },
-        }],
+          {
+            qDef: {
+              qDef: '[imdbRating]',
+              qLabel: 'imdb rating',
+            },
+          }
+        ],
         qInitialDataFetch: [{
-          qTop: 0, qHeight: 50, qLeft: 0, qWidth: 3,
+          qTop: 0,
+          qHeight: 50,
+          qLeft: 0,
+          qWidth: 3,
         }],
         qSuppressZero: false,
         qSuppressMissing: true,
@@ -121,10 +125,12 @@ angular.module('app', []).component('app', {
           qSortBy: {
             qSortByNumeric: -1,
           },
-        },
-        ],
+        }, ],
         qInitialDataFetch: [{
-          qTop: 0, qHeight: 50, qLeft: 0, qWidth: 3,
+          qTop: 0,
+          qHeight: 50,
+          qLeft: 0,
+          qWidth: 3,
         }],
         qSuppressZero: false,
         qSuppressMissing: false,
@@ -158,12 +164,26 @@ angular.module('app', []).component('app', {
       const filePathMovie = '/data/movies.csv';
       const tableMovie = new Halyard.Table(filePathMovie, {
         name: 'Movies',
-        fields: [
-          { src: 'Movie', name: 'Movie' },
-          { src: 'Year', name: 'Year' },
-          { src: 'Adjusted Costs', name: 'Adjusted Costs' },
-          { src: 'Description', name: 'Description' },
-          { src: 'Image', name: 'Image' },
+        fields: [{
+            src: 'Movie',
+            name: 'Movie'
+          },
+          {
+            src: 'Year',
+            name: 'Year'
+          },
+          {
+            src: 'Adjusted Costs',
+            name: 'Adjusted Costs'
+          },
+          {
+            src: 'Description',
+            name: 'Description'
+          },
+          {
+            src: 'Image',
+            name: 'Image'
+          },
         ],
         delimiter: ',',
       });
@@ -172,7 +192,11 @@ angular.module('app', []).component('app', {
       // Add web data
       $http.get('https://gist.githubusercontent.com/carlioth/b86ede12e75b5756c9f34c0d65a22bb3/raw/e733b74c7c1c5494669b36893a31de5427b7b4fc/MovieInfo.csv')
         .then((data) => {
-          const table = new Halyard.Table(data.data, { name: 'MoviesInfo', delimiter: ';', characterSet: 'utf8' });
+          const table = new Halyard.Table(data.data, {
+            name: 'MoviesInfo',
+            delimiter: ';',
+            characterSet: 'utf8'
+          });
           halyard.addTable(table);
         })
         .then(() => {
@@ -187,6 +211,7 @@ angular.module('app', []).component('app', {
                     scatterplotObject = model;
 
                     const update = () => scatterplotObject.getLayout().then((layout) => {
+                      console.log(layout);
                       paintScatterPlot(layout);
                     });
 
@@ -198,6 +223,7 @@ angular.module('app', []).component('app', {
                     linechartObject = model;
 
                     const update = () => linechartObject.getLayout().then((layout) => {
+                      console.log(layout);
                       paintLineChart(layout);
                     });
 
@@ -235,33 +261,36 @@ angular.module('app', []).component('app', {
         labels: true,
         qHyperCubeDef: {
           qDimensions: [{
-            qDef: {
-              qFieldDefs: ['Movie'],
+              qDef: {
+                qFieldDefs: ['Movie'],
+              },
             },
-          },
-          {
-            qDef: {
-              qFieldDefs: ['Image'],
+            {
+              qDef: {
+                qFieldDefs: ['Image'],
+              },
             },
-          },
-          {
-            qDef: {
-              qFieldDefs: ['Year'],
+            {
+              qDef: {
+                qFieldDefs: ['Year'],
+              },
             },
-          },
-          {
-            qDef: {
-              qFieldDefs: ['Genre'],
+            {
+              qDef: {
+                qFieldDefs: ['Genre'],
+              },
             },
-          },
-          {
-            qDef: {
-              qFieldDefs: ['Description'],
+            {
+              qDef: {
+                qFieldDefs: ['Description'],
+              },
             },
-          },
           ],
           qInitialDataFetch: [{
-            qTop: 0, qHeight: 50, qLeft: 0, qWidth: 50,
+            qTop: 0,
+            qHeight: 50,
+            qLeft: 0,
+            qWidth: 50,
           }],
           qSuppressZero: false,
           qSuppressMissing: true,

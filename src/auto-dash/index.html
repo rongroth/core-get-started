@@ -8,10 +8,13 @@
       if (location.href.substr(-1) != '/') {
         location.href = location.href + '/';
       }
-    </script>
+    </script
+    <script src="table.js"></script>
 </head>
 <body>
     <app></app>
     <script src="app.js"></script>
+    <input type="button" onclick="CreateTableFromJSON()" value="Create Table From JSON" />
+    <p id="showData"></p>
 </body>
 </html>

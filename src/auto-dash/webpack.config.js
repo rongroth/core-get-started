@@ -6,12 +6,18 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 module.exports = {
   mode: 'development',
   context: path.resolve(__dirname),
-  entry: { app: './app.js' },
+  entry: {
+    app: ['./app.js', './table.js']
+  },
   output: {
     filename: 'app.js',
     path: path.resolve(__dirname, 'dist'),
   },
-  devServer: { host: '0.0.0.0', port: '8080', disableHostCheck: true },
+  devServer: {
+    host: '0.0.0.0',
+    port: '8080',
+    disableHostCheck: true
+  },
   stats: {
     colors: true,
     modules: true,
@@ -20,8 +26,7 @@ module.exports = {
   },
   devtool: 'source-map',
   module: {
-    rules: [
-      {
+    rules: [{
         test: /\.html$/,
         loader: 'raw-loader',
       },
@@ -29,16 +34,26 @@ module.exports = {
         test: /\.js$/,
         loader: 'babel-loader',
         exclude: [path.resolve(__dirname, 'node_modules')],
-        query: { presets: ['@babel/preset-env'] },
+        query: {
+          presets: ['@babel/preset-env']
+        },
       },
     ],
   },
   plugins: [
-    new CopyWebpackPlugin([
-      { from: 'index.html' },
-      { from: 'app.html' },
-      { from: 'app.css' },
-      { from: 'resources/', to: 'resources/' },
+    new CopyWebpackPlugin([{
+        from: 'index.html'
+      },
+      {
+        from: 'app.html'
+      },
+      {
+        from: 'app.css'
+      },
+      {
+        from: 'resources/',
+        to: 'resources/'
+      },
     ]),
   ],
 };

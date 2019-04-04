@@ -1,0 +1,42 @@
+[
+    {
+        "Impacts": "impact 5",
+        "likelihood 1": "SBSEG 2, Platform 3, SLCP-Legal, 1",
+        "likelihood 2": "CG 1",
+        "likelihood 3": "SBSEG 1",
+        "likelihood 4": "CEG 1",
+        "likelihood 5": " SBSEG 1, T4i 7"
+    },
+    {
+        "Impacts": "impact 4",
+        "likelihood 1": "SBSEG 2, Platform 3, SLCP-Legal, 1",
+        "likelihood 2": "CG 1",
+        "likelihood 3": "SBSEG 1",
+        "likelihood 4": "",
+        "likelihood 5": "T4i 1, CEG 1"
+    },
+    {
+        "Impacts": "impact 3",
+        "likelihood 1": "SBSEG 2, Platform 3, SLCP-Legal, 1",
+        "likelihood 2": "CG 1",
+        "likelihood 3": "SBSEG 1",
+        "likelihood 4": "CEG 1",
+        "likelihood 5": " SBSEG 1, T4i 7"
+    },
+    {
+        "Impacts": "impact 2",
+        "likelihood 1": "SBSEG 2, Platform 3, SLCP-Legal, 1",
+        "likelihood 2": "CG 1",
+        "likelihood 3": "SBSEG 1",
+        "likelihood 4": "CEG 1",
+        "likelihood 5": " SBSEG 1, T4i 7"
+    },
+    {
+        "Impacts": "impact 1",
+        "likelihood 1": "SBSEG 2, Platform 3, SLCP-Legal, 1",
+        "likelihood 2": "CG 1",
+        "likelihood 3": "SBSEG 1",
+        "likelihood 4": "CEG 1",
+        "likelihood 5": " SBSEG 1, T4i 7"
+    },
+]

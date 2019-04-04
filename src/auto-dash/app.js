@@ -33,49 +33,33 @@ angular.module('app', []).component('app', {
     this.connecting = true;
 
     let app = null;
-    let scatterplotObject = null;
     let linechartObject = null;
 
-    const select = (value) => {
-      app.getField('timestamp').then((field) => {
-        field.select(value).then(() => {
-          $scope.dataSelected = true;
-          this.getIisInfo().then(() => {
-            $scope.showFooter = true;
-          });
-        });
-      });
-    };
-
-    const scatterplotProperties = {
+    const linechartProperties = {
       qInfo: {
         qType: 'visualization',
         qId: '',
       },
-      type: 'my-picasso-scatterplot',
+      type: 'my-picasso-linechart',
       labels: true,
       qHyperCubeDef: {
         qDimensions: [{
           qDef: {
-            qFieldDefs: ['IDPS-TPS'],
+            qFieldDefs: ['timestamp'],
             qSortCriterias: [{
               qSortByAscii: 1,
             }],
           },
         }],
         qMeasures: [{
-            qDef: {
-              qDef: '[TPS]',
-              qLabel: 'TPS',
-            }
+          qDef: {
+            qDef: 'TPS',
+            qLabel: 'TPS',
           },
-          {
-            qDef: {
-              qDef: '[timestamp]',
-              qLabel: 'time',
-            },
-          }
-        ],
+          qSortBy: {
+            qSortByNumeric: -1,
+          },
+        }, ],
         qInitialDataFetch: [{
           qTop: 0,
           qHeight: 10,
@@ -83,18 +67,14 @@ angular.module('app', []).component('app', {
           qWidth: 2,
         }],
         qSuppressZero: false,
-        qSuppressMissing: true,
+        qSuppressMissing: false,
       },
     };
 
-    const scatterplot = new Scatterplot();
+    const linechart = new Linechart();
 
-    const paintScatterPlot = (layout) => {
-      scatterplot.paintScatterplot(document.getElementById('chart-container-scatterplot'), layout, {
-        select,
-        clear: () => this.clearAllSelections(),
-        hasSelected: $scope.dataSelected,
-      });
+    const paintLineChart = (layout) => {
+      linechart.paintLinechart(document.getElementById('chart-container-linechart'), layout);
       this.painted = true;
     };
 
@@ -138,16 +118,15 @@ angular.module('app', []).component('app', {
           app = result;
           result.getAppLayout()
             .then(() => {
-              result.createSessionObject(scatterplotProperties).then((model) => {
-                scatterplotObject = model;
+              result.createSessionObject(linechartProperties).then((model) => {
+                linechartObject = model;
 
-                const update = () => scatterplotObject.getLayout().then((layout) => {
-                  const tpss = layout.qHyperCube.qDataPages[0].qMatrix;
+                const update = () => linechartObject.getLayout().then((layout) => {
                   console.log(layout);
-                  paintScatterPlot(layout);
+                  paintLineChart(layout);
                 });
 
-                scatterplotObject.on('changed', update);
+                linechartObject.on('changed', update);
                 update();
               });
             });
@@ -170,42 +149,6 @@ angular.module('app', []).component('app', {
       $scope.showFooter = false;
     };
 
-    this.getIisInfo = () => {
-      const tableProperties = {
-        qInfo: {
-          qType: 'visualization',
-          qId: '',
-        },
-        type: 'my-info-table',
-        labels: true,
-        qHyperCubeDef: {
-          qDimensions: [{
-              qDef: {
-                qFieldDefs: ['timestamp'],
-              },
-            },
-            {
-              qDef: {
-                qFieldDefs: ['TPS'],
-              },
-            },
-          ],
-          qInitialDataFetch: [{
-            qTop: 0,
-            qHeight: 10,
-            qLeft: 0,
-            qWidth: 2,
-          }],
-          qSuppressZero: false,
-          qSuppressMissing: true,
-        },
-      };
-      return app.createSessionObject(tableProperties)
-        .then(model => model.getLayout()
-          .then((layout) => {
-            Scatterplot.showDetails(layout);
-          }));
-    };
   }],
   template,
 });
