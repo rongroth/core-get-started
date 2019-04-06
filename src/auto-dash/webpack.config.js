@@ -7,7 +7,7 @@ module.exports = {
   mode: 'development',
   context: path.resolve(__dirname),
   entry: {
-    app: ['./app.js', './table.js']
+    app: ['./app.js']
   },
   output: {
     filename: 'app.js',

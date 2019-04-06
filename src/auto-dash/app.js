@@ -8,6 +8,7 @@ import qixSchema from 'enigma.js/schemas/3.2.json';
 import template from './app.html';
 import Scatterplot from './scatterplot';
 import Linechart from './linechart';
+import dynamicTable from './dynamicTable.js'
 
 const halyard = new Halyard();
 
@@ -128,6 +129,7 @@ angular.module('app', []).component('app', {
 
                 linechartObject.on('changed', update);
                 update();
+
               });
             });
         }, () => {

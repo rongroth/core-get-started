@@ -1,0 +1,22 @@
+[{
+	"productDetails": {
+		"name": "XXX",
+		"manufactureDate": "31/03/1991",
+		"price": {
+			"basePrice": 200,
+			"tax": 50,
+			"total": 250
+		}
+	}
+},
+{
+	"productDetails": {
+		"name": "YYY",
+		"manufactureDate": "31/03/1991",
+		"price": {
+			"basePrice": 400,
+			"tax": 50,
+			"total": 450
+		}
+	}
+}]

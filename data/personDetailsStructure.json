@@ -1,0 +1,113 @@
+{
+	"num" : 1,
+	"name" : "Person Details",
+	"id" : "personDetails",
+	"columns" :
+	[
+		{
+			"num" : 1,
+			"name" : "Name",
+			"id" : "name"
+		},
+		{
+			"num" : 2,
+			"name" : "DOB",
+			"id" : "dob"
+		},
+		{
+			"num" : 3,
+			"name" : "Age",
+			"id" : "age"
+		},
+		{
+			"num" : 4,
+			"name" : "Contact Details",
+			"id" : "contactDetails",
+			"columns" :
+			[
+				{
+					"num" : 1,
+					"name" : "Billing Address",
+					"id" : "billingAddress",
+					"columns" :
+					[
+						{
+							"num" : 1,
+							"name" : "Street",
+							"id" : "street"
+						},
+						{
+							"num" : 2,
+							"name" : "District",
+							"id" : "district"
+						},
+						{
+							"num" : 3,
+							"name" : "City",
+							"id" : "city"
+						}
+					]
+				},
+				{
+					"num" : 2,
+					"name" : "Shipping Address",
+					"id" : "shippingAddress",
+					"columns" :
+					[
+						{
+							"num" : 1,
+							"name" : "Street",
+							"id" : "street"
+						},
+						{
+							"num" : 2,
+							"name" : "District",
+							"id" : "district"
+						},
+						{
+							"num" : 3,
+							"name" : "City",
+							"id" : "city"
+						}
+					]
+				},
+				{
+					"num" : 3,
+					"name" : "Phone",
+					"id" : "phone",
+					"columns" :
+					[
+						{
+							"num" : 1,
+							"name" : "Home",
+							"id" : "home"
+						},
+						{
+							"num" : 2,
+							"name" : "Office",
+							"id" : "office"
+						}
+					]
+				}
+			]
+		},
+		{
+			"num" : 5,
+			"name" : "Cards",
+			"id" : "cards",
+			"columns" :
+			[
+				{
+					"num" : 1,
+					"name" : "Debit",
+					"id" : "debit"
+				},
+				{
+					"num" : 2,
+					"name" : "Credit",
+					"id" : "credit"
+				}
+			]
+		}
+	]
+}
