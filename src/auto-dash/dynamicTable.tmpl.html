@@ -1,0 +1,8 @@
+<table>
+  <tr ng-repeat="headerRow in headerList">
+    <th ng-repeat="header in headerRow" rowspan="{{header.rs}}" colspan="{{header.cs}}">{{header.name}}</th>
+  </tr>
+  <tr ng-repeat="rowData in tabledata">
+    <td ng-repeat="leafNode in leafNodeList">{{leafNode.getter(rowData)}}</td>
+  </tr>
+</table>

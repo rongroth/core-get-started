@@ -48,7 +48,22 @@ module.exports = {
         from: 'app.html'
       },
       {
+        from: 'dynamicTable.tmpl.html'
+      },
+      {
         from: 'app.css'
+      },
+      {
+        from: 'personDetailsData.json'
+      },
+      {
+        from: 'personDetailsStructure.json'
+      },
+      {
+        from: 'productTableData.json'
+      },
+      {
+        from: 'productTableStructure.json'
       },
       {
         from: 'resources/',

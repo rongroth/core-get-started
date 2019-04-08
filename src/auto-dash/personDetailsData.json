@@ -1,0 +1,54 @@
+[{
+	"personDetails": {
+		"name": "Nithin",
+		"dob": "31/03/1991",
+		"age": 25,
+		"contactDetails": {
+			"billingAddress": {
+				"street": "AICOBAR",
+				"district": "BTM",
+				"city": "Bangalore"
+			},
+			"shippingAddress": {
+				"street": "AICOBAR",
+				"district": "BTM",
+				"city": "Bangalore"
+			},
+			"phone": {
+				"home": 12345678,
+				"office": 98765432
+			}
+		},
+		"cards": {
+			"debit": 12121212,
+			"credit": 43434343
+		}
+	}
+},
+{
+	"personDetails": {
+		"name": "NithinXXX",
+		"dob": "31/03/1991",
+		"age": 25,
+		"contactDetails": {
+			"billingAddress": {
+				"street": "AICOBAR",
+				"district": "BTM",
+				"city": "Bangalore"
+			},
+			"shippingAddress": {
+				"street": "AICOBAR",
+				"district": "BTM",
+				"city": "Bangalore"
+			},
+			"phone": {
+				"home": 12345678,
+				"office": 98765432
+			}
+		},
+		"cards": {
+			"debit": 12121212,
+			"credit": 43434343
+		}
+	}
+}]

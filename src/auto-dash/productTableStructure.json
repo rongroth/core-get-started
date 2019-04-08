@@ -1,0 +1,35 @@
+{
+	"num": 1,
+	"name": "Product Details",
+	"id": "productDetails",
+	"columns": [{
+		"num": 1,
+		"name": "Name",
+		"id": "name"
+	},
+	{
+		"num": 2,
+		"name": "Manufacture Date",
+		"id": "manufactureDate"
+	},
+	{
+		"num": 3,
+		"name": "Price",
+		"id": "price",
+		"columns": [{
+			"num": 1,
+			"name": "Base Price",
+			"id": "basePrice"
+		},
+		{
+			"num": 2,
+			"name": "Tax",
+			"id": "tax"
+		},
+		{
+			"num": 3,
+			"name": "Total",
+			"id": "total"
+		}]
+	}]
+}
