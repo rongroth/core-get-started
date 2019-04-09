@@ -268,6 +268,14 @@ angular.module('app', []).component('app', {
         }
       }
     };
-  });;
+
+    newElement = $compile("<div ng-controller = 'myCtrl' ><dynamic-table tablestructure='productTableStructure' tabledata='productTableData'></dynamic-table><div>")($scope);
+    $element.parent().append(newElement);
+  })
+
+  .directive('dynamic', function($compile) {
+    newElement = $compile("<div ng-controller = 'myCtrl' ><dynamic-table tablestructure='productTableStructure' tabledata='productTableData'></dynamic-table><div>")($scope);
+    $element.parent().append(newElement);
+  });
 
 angular.bootstrap(document, ['app']);

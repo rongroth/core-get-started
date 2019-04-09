@@ -18,6 +18,9 @@ body {
   margin: 0;
   height: 100%;
 }
+table, th, td {
+  border: 1px solid white;
+}
 
 body {
   font-family: quicksand-regular;
