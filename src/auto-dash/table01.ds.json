@@ -1,0 +1,32 @@
+{
+    "num": 1,
+    "name": "BU/FU Security Defects",
+    "id": "securityDefects",
+    "columns": [
+        {
+            "num": 1,
+            "name": "BU/FU",
+            "id": "bufu"
+        },
+        {
+            "num": 2,
+            "name": "P0",
+            "id": "p0"
+        },
+        {
+            "num": 3,
+            "name": "P1",
+            "id": "p1"
+        },
+        {
+            "num": 4,
+            "name": "P2",
+            "id": "p2"
+        },
+        {
+            "num": 5,
+            "name": "P3",
+            "id": "p3"
+        }
+    ]
+}

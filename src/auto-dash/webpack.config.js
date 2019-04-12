@@ -24,6 +24,9 @@ module.exports = {
     reasons: true,
     errorDetails: true,
   },
+  node: {
+      fs: "empty"
+  },
   devtool: 'source-map',
   module: {
     rules: [{
@@ -67,6 +70,12 @@ module.exports = {
       },
       {
         from: 'autoDashSpec.json'
+      },
+      {
+        from: 'table01.ds.json'
+      },
+      {
+        from: 'table01.json'
       },
       {
         from: 'resources/',

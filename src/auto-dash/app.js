@@ -8,7 +8,10 @@ import qixSchema from 'enigma.js/schemas/3.2.json';
 import template from './app.html';
 import Scatterplot from './scatterplot';
 import Linechart from './linechart';
-import Arboreal from './arboreal.js'
+import Arboreal from './arboreal.js';
+
+const fs = require('fs');
+
 
 const halyard = new Halyard();
 
@@ -236,6 +239,9 @@ angular.module('app', []).component('app', {
     $scope.productTableStructure = {};
     $scope.productTableData = [];
 
+    $scope.table01_ds = {};
+    $scope.table01 = [];
+
     /*
         Using the angular $http function to get data from the server.
     */
@@ -268,7 +274,21 @@ angular.module('app', []).component('app', {
       $scope.productTableData = response.data;
     });
 
-  }])
+    $http({
+      method: 'GET',
+      url: 'table01.ds.json'
+    }).then(function(response) {
+      $scope.table01_ds = response.data;
+    });
+    $http({
+      method: 'GET',
+      url: 'table01.json'
+    }).then(function(response) {
+      console.log("table01", response);
+      $scope.table01 = response.data;
+    });
+
+ }])
 
   .controller('dynCtrl', ['$scope', '$http', '$timeout', function($scope, $http, $timeout) {
 

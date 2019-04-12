@@ -1,0 +1,28 @@
+[{
+    "securityDefects": {
+        "bufu": "CGX",
+        "p0": 3,
+        "p1": 0,
+        "p2": 11,
+        "p3": 44
+    }
+},
+{
+    "securityDefects": {
+        "bufu": "SBSEG",
+        "p0": 3,
+        "p1": 0,
+        "p2": 21,
+        "p3": 55
+    }
+},
+{
+    "securityDefects": {
+        "bufu": "Platform",
+        "p0": 3,
+        "p1": 0,
+        "p2": 11,
+        "p3": 12
+    }
+
+}]

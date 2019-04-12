@@ -1,3 +1,8 @@
 {
-    "type": "linechart"
+    "files": [
+        "table01.ds.json",
+        "table02.ds.json",
+        "linechart01.json",
+        "linechart02.json"
+    ]
 }
