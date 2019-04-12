@@ -66,6 +66,9 @@ module.exports = {
         from: 'productTableStructure.json'
       },
       {
+        from: 'autoDashSpec.json'
+      },
+      {
         from: 'resources/',
         to: 'resources/'
       },

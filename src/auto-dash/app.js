@@ -12,6 +12,69 @@ import Arboreal from './arboreal.js'
 
 const halyard = new Halyard();
 
+function generateTheDataStructure(tablestructure, tabledata, parse, scope) {
+
+  // convert tablestructure json object to Arboreal tree object
+  var tableStructureTree = Arboreal.parse(tablestructure, 'columns');
+
+  // iterator3 to calculate number of leaf nodes in the particular branch
+  function iterator3(node) {
+    if (node.children.length === 0)
+      leafNodes++;
+  }
+  var treeDepth = 0;
+  var leafNodes = 0;
+  // iterator to calculate depth of the tree
+  function iterator(node) {
+    if (treeDepth < node.depth)
+      treeDepth = node.depth
+    leafNodes = 0;
+    node.traverseDown(iterator3);
+    node.leafNodes = leafNodes;
+  }
+  tableStructureTree.traverseDown(iterator);
+
+  // iterator2 to calculate rowspan and colspan at each node
+  // also calculate dataAccessString at each node
+  function iterator2(node) {
+    if (node.children.length === 0) {
+      node.data.rs = treeDepth - node.depth + 1;
+      node.data.cs = 1;
+    } else {
+      node.data.rs = 1;
+      node.data.cs = node.leafNodes;
+    }
+    if (node.parent === null) {
+      node.data.dataAccessString = node.data.id;
+    } else {
+      node.data.dataAccessString = node.parent.data.dataAccessString + "." + node.data.id;
+    }
+    node.data.getter = parse(node.data.dataAccessString);
+  }
+  tableStructureTree.traverseDown(iterator2);
+
+  // get list of nodes at kth level, where k ranges from 0 to treeDepth
+  var iLevelList = [];
+  scope.headerList = [];
+  for (var i = 0; i <= treeDepth; i++) {
+    iLevelList = [];
+    tableStructureTree.drill(tableStructureTree, 0, i, iLevelList);
+    scope.headerList.push(iLevelList);
+  }
+
+  scope.leafNodeList = [];
+  // iterator4 to get list of all leaf nodes in the tree
+  function iterator4(node) {
+    if (node.children.length === 0) {
+      scope.leafNodeList.push(node.data);
+    }
+  }
+  tableStructureTree.traverseDown(iterator4);
+  // scope.headerList -- holds list of nodes at kth level, where k ranges from 0 to treeDepth -- for displaying table header
+  // scope.leafNodeList -- holds list of all leaf nodes in the tree -- for displaying table data
+}
+
+
 angular.module('app', []).component('app', {
     bindings: {},
     controller: ['$scope', '$q', '$http', function Controller($scope, $q, $http) {
@@ -87,6 +150,14 @@ angular.module('app', []).component('app', {
         return v.toString(16);
       });
 
+      const createDynamicContent = () => {
+        console.log('in createDynamicContent');
+
+        const dynElement = document.getElementById('dynamic-content');
+        dynElement.appendChild(document.createTextNode('some dynamic text'));
+      }
+
+
       this.$onInit = () => {
         const config = {
           Promise: $q,
@@ -131,6 +202,8 @@ angular.module('app', []).component('app', {
                   update();
 
                 });
+
+                createDynamicContent();
               });
           }, () => {
             this.error = 'Could not create session app';
@@ -157,17 +230,21 @@ angular.module('app', []).component('app', {
 
   .controller('myCtrl', ['$scope', '$http', '$timeout', function($scope, $http, $timeout) {
 
-    $scope.personDetailsObject = {};
+    $scope.personDetailsStructure = {};
     $scope.personDetailsData = [];
 
     $scope.productTableStructure = {};
     $scope.productTableData = [];
 
+    /*
+        Using the angular $http function to get data from the server.
+    */
+
     $http({
       method: 'GET',
       url: 'personDetailsStructure.json'
     }).then(function(response) {
-      $scope.personDetailsObject = response.data;
+      $scope.personDetailsStructure = response.data;
     });
     $http({
       method: 'GET',
@@ -187,9 +264,54 @@ angular.module('app', []).component('app', {
       method: 'GET',
       url: 'productTableData.json'
     }).then(function(response) {
+      console.log("productTableData", response);
       $scope.productTableData = response.data;
     });
+
   }])
+
+  .controller('dynCtrl', ['$scope', '$http', '$timeout', function($scope, $http, $timeout) {
+
+    $scope.autoDashSpec = {};
+
+    /*
+        Using the angular $http function to get data from the server.
+    */
+
+    // get the display spec
+    $http({
+      method: 'GET',
+      url: 'autoDashSpec.json'
+    }).then(function(response) {
+      console.log("http", response);
+      $scope.autoDashSpec = response.data;
+      console.log($scope.autoDashSpec);
+    });
+  }])
+
+
+  .directive('dynamicContent', function($parse) {
+    return {
+      restrict: 'E',
+      scope: {
+        dyncontentspec: "="
+      },
+      template: "<pre>{{dyncontentspec}}</pre>",
+      link: function link(scope, element, attrs) {
+
+        console.log("dynamicContent link function", scope);
+
+        scope.$watch('dyncontentspec', function(newDynContentSpec) {
+          console.log("dynContentSpec watch firing", newDynContentSpec);
+          generateDynamicContent(newDynContentSpec);
+        });
+
+        function generateDynamicContent(dynContentSpec) {
+          console.log("dynContentSpec", dynContentSpec);
+        }
+      }
+    };
+  })
 
   .directive('dynamicTable', function($parse) {
     return {
@@ -201,81 +323,18 @@ angular.module('app', []).component('app', {
       templateUrl: 'dynamicTable.tmpl.html',
       link: function link(scope, element, attrs) {
 
+        console.log("dynamic table link function", scope);
+
+        // Watching for any change to the table structure
         scope.$watch('tablestructure', function(newTablestructure) {
+          console.log("tableStructure watch firing", newTablestructure);
           // need to re-run the table generation everytime tablestructure changes
-          generateTheDataStructure(newTablestructure, scope.tabledata);
+          generateTheDataStructure(newTablestructure, scope.tabledata, $parse, scope);
         });
 
-        function generateTheDataStructure(tablestructure, tabledata) {
-          // convert tablestructure json object to Arboreal tree object
-          var tableStructureTree = Arboreal.parse(tablestructure, 'columns');
 
-          // iterator3 to calculate number of leaf nodes in the particular branch
-          function iterator3(node) {
-            if (node.children.length === 0)
-              leafNodes++;
-          }
-          var treeDepth = 0;
-          var leafNodes = 0;
-          // iterator to calculate depth of the tree
-          function iterator(node) {
-            if (treeDepth < node.depth)
-              treeDepth = node.depth
-            leafNodes = 0;
-            node.traverseDown(iterator3);
-            node.leafNodes = leafNodes;
-          }
-          tableStructureTree.traverseDown(iterator);
-
-          // iterator2 to calculate rowspan and colspan at each node
-          // also calculate dataAccessString at each node
-          function iterator2(node) {
-            if (node.children.length === 0) {
-              node.data.rs = treeDepth - node.depth + 1;
-              node.data.cs = 1;
-            } else {
-              node.data.rs = 1;
-              node.data.cs = node.leafNodes;
-            }
-            if (node.parent === null) {
-              node.data.dataAccessString = node.data.id;
-            } else {
-              node.data.dataAccessString = node.parent.data.dataAccessString + "." + node.data.id;
-            }
-            node.data.getter = $parse(node.data.dataAccessString);
-          }
-          tableStructureTree.traverseDown(iterator2);
-
-          // get list of nodes at kth level, where k ranges from 0 to treeDepth
-          var iLevelList = [];
-          scope.headerList = [];
-          for (var i = 0; i <= treeDepth; i++) {
-            iLevelList = [];
-            tableStructureTree.drill(tableStructureTree, 0, i, iLevelList);
-            scope.headerList.push(iLevelList);
-          }
-
-          scope.leafNodeList = [];
-          // iterator4 to get list of all leaf nodes in the tree
-          function iterator4(node) {
-            if (node.children.length === 0) {
-              scope.leafNodeList.push(node.data);
-            }
-          }
-          tableStructureTree.traverseDown(iterator4);
-          // scope.headerList -- holds list of nodes at kth level, where k ranges from 0 to treeDepth -- for displaying table header
-          // scope.leafNodeList -- holds list of all leaf nodes in the tree -- for displaying table data
-        }
       }
     };
-
-    newElement = $compile("<div ng-controller = 'myCtrl' ><dynamic-table tablestructure='productTableStructure' tabledata='productTableData'></dynamic-table><div>")($scope);
-    $element.parent().append(newElement);
-  })
-
-  .directive('dynamic', function($compile) {
-    newElement = $compile("<div ng-controller = 'myCtrl' ><dynamic-table tablestructure='productTableStructure' tabledata='productTableData'></dynamic-table><div>")($scope);
-    $element.parent().append(newElement);
   });
 
 angular.bootstrap(document, ['app']);
